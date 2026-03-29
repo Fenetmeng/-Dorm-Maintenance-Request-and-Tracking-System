@@ -3,18 +3,15 @@
 
 This project is a dorm maintenance management system that allows users to report maintenance issues and track their status. The system includes authentication, role-based authorization, and two main business features: maintenance requests and assignment management. It follows a layered architecture and uses a REST API for communication between frontend and backend.
 
+                   Team Members
+           Full Name 	        ID
+    •    Fenet Mengistu     UGR/7035/16
+    •    Firdaus Kedir	    UGR/7473/16
+    •    Hawi Jarso	        UGR/4431/16
+    •    Lidiya Girma	    UGR/4475/16
+    •    Melat  Lemma
 
-
-                           Team Members
-
-           Full Name 	              ID
-   Fenet Mengistu 	          UGR/7035/16
-   Firdaus Kedir	            UGR/7473/16
-   Hawi Jarso	                UGR/4431/16
-   Lidiya Girma	              UGR/4475/16
-	 Melat Lemma
-
-   Features
+   Features  
 
  Authentication
 - User signup
