@@ -1,7 +1,7 @@
 # -Dorm-Maintenance-Request-and-Tracking-System
                                                 Project Description
 
-This project is a dorm maintenance management system that allows users to report maintenance issues and track their status. The system includes authentication, role-based authorization, and two main business features: maintenance requests and assignment management. It follows a layered architecture and uses a REST API for communication between frontend and backend.
+This project is a dorm maintenance management system that allows users to report maintenance issues and track their status. The system includes authentication, role-based authorization, and two main business features: maintenance requests and assignment management. It follows a layered architecture and uses a REST API for communication between frontend and backend. It also has an additional feature mainly a maintenance feedback and rating that edits, updates, submit, and rates the maintenance service.
 
                    Team Members
            Full Name 	        ID
