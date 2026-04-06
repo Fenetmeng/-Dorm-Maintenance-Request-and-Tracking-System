@@ -61,3 +61,12 @@ User Interface
 - Admin dashboard
 - Assignment management screen
 
+Maintenance Feedback & Rating
+
+- Users can submit feedback on completed maintenance requests
+- Users can rate the maintenance service (e.g., 1 to 5 stars)
+- Users can edit or update their feedback if needed
+- Users can view feedback history for their previous requests
+- Users can see average ratings for each maintenance request or service
+- Admins can review all feedback and ratings
+- Admins can respond to user feedback
