@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../auth/presentation/widgets/auth_button.dart';
@@ -27,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/home');
+                        context.go(AppRoutes.home);
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -143,7 +144,7 @@ class ProfileScreen extends StatelessWidget {
                         AuthButton(
                            text: 'Done',
                            onPressed: () {
-                            context.go('/home');
+                            context.go(AppRoutes.home);
                           },
                         ),
 
@@ -154,7 +155,7 @@ class ProfileScreen extends StatelessWidget {
                           height: 52,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.go('/');
+                              context.go(AppRoutes.welcome);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFEF4444),

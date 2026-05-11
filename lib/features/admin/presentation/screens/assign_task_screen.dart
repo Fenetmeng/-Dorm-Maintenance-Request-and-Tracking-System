@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 
@@ -25,7 +26,7 @@ class AssignTaskScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/admin-requests');
+                        context.go(AppRoutes.adminRequests);
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -203,7 +204,7 @@ class AssignTaskScreen extends StatelessWidget {
                           height: 52,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.go('/admin-requests');
+                              context.go(AppRoutes.adminRequests);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0F172A),
@@ -228,7 +229,7 @@ class AssignTaskScreen extends StatelessWidget {
                         Center(
                           child: TextButton(
                             onPressed: () {
-                              context.go('/staff-workload');
+                              context.go(AppRoutes.staffWorkload);
                             },
                             child: const Text(
                               'View Staff Workload',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../widgets/auth_button.dart';
@@ -73,7 +74,7 @@ class LoginScreen extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              context.go('/forgot-password');
+                              context.go(AppRoutes.forgotPassword);
                             },
                             child: const Text(
                               'Forgot Password?',
@@ -90,7 +91,7 @@ class LoginScreen extends StatelessWidget {
                         AuthButton(
                           text: 'LOG IN',
                           onPressed: () {
-                            context.go('/home');
+                            context.go(AppRoutes.home);
                           },
                         ),
 
@@ -101,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                           height: 52,
                           child: OutlinedButton(
                             onPressed: () {
-                              context.go('/admin-overview');
+                              context.go(AppRoutes.adminOverview);
                             },
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(
@@ -134,7 +135,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () {
-                                context.go('/signup');
+                                context.go(AppRoutes.signup);
                               },
                               child: const Text(
                                 'Sign Up',

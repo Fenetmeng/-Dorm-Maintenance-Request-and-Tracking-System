@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 
@@ -25,7 +26,7 @@ class RequestDetailsScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/requests');
+                        context.go(AppRoutes.requests);
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -178,7 +179,7 @@ class RequestDetailsScreen extends StatelessWidget {
                           height: 52,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.go('/edit-request');
+                              context.go(AppRoutes.editRequest);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryBlue,
@@ -205,7 +206,7 @@ class RequestDetailsScreen extends StatelessWidget {
                           height: 52,
                           child: OutlinedButton(
                             onPressed: () {
-                              context.go('/requests');
+                              context.go(AppRoutes.requests);
                             },
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(

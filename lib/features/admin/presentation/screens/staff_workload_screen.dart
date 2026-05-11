@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../widgets/workload_card.dart';
@@ -26,7 +27,7 @@ class StaffWorkloadScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/assign-task');
+                        context.go(AppRoutes.assignTask);
                       },
                       icon: const Icon(
                         Icons.arrow_back,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../auth/presentation/widgets/auth_button.dart';
@@ -27,7 +28,7 @@ class NewRequestScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/home');
+                        context.go(AppRoutes.home);
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -148,7 +149,7 @@ class NewRequestScreen extends StatelessWidget {
                         AuthButton(
                           text: 'Submit Request',
                           onPressed: () {
-                            context.go('/requests');
+                            context.go(AppRoutes.requests);
                           },
                         ),
                       ],

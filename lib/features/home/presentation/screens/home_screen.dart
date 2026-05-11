@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../widgets/stat_card_widget.dart';
@@ -62,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                            GestureDetector(
                             onTap: () {
-                              context.go('/profile');
+                              context.go(AppRoutes.profile);
                             },
                             child: const CircleAvatar(
                              radius: 34,
@@ -116,7 +117,7 @@ class HomeScreen extends StatelessWidget {
                           height: 54,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.go('/new-request');
+                              context.go(AppRoutes.newRequest);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryBlue,
@@ -156,7 +157,7 @@ class HomeScreen extends StatelessWidget {
                           statusColor: const Color(0xFFF2B705),
                           statusBackground: const Color(0xFFFFF6D8),
                           onTap: () {
-                            context.go('/request-details');
+                            context.go(AppRoutes.requestDetails);
                           },
                         ),
 
@@ -167,7 +168,7 @@ class HomeScreen extends StatelessWidget {
                           statusColor: const Color(0xFF22C55E),
                           statusBackground: const Color(0xFFDFF8E8),
                           onTap: () {
-                            context.go('/request-details');
+                            context.go(AppRoutes.requestDetails);
                           },
                         ),
                       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../widgets/auth_button.dart';
@@ -76,7 +77,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                       Center(
                         child: TextButton(
                           onPressed: () {
-                            context.go('/login');
+                            context.go(AppRoutes.login);
                           },
                           child: const Text(
                             'Back to login',

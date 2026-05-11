@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../widgets/auth_button.dart';
@@ -70,7 +71,7 @@ class WelcomeScreen extends StatelessWidget {
                     AuthButton(
                       text: 'Get Started',
                       onPressed: () {
-                        context.go('/signup');
+                        context.go(AppRoutes.signup);
                       },
                     ),
 
@@ -79,7 +80,7 @@ class WelcomeScreen extends StatelessWidget {
                     AuthButton(
                       text: 'Login',
                       onPressed: () {
-                        context.go('/login');
+                        context.go(AppRoutes.login);
                       },
                     ),
                   ],

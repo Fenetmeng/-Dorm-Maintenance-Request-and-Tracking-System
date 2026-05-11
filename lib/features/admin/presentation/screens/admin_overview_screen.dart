@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../widgets/admin_stat_card.dart';
@@ -127,7 +128,7 @@ class AdminOverviewScreen extends StatelessWidget {
                           height: 52,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.go('/admin-requests');
+                              context.go(AppRoutes.adminRequests);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0F172A),
@@ -154,7 +155,7 @@ class AdminOverviewScreen extends StatelessWidget {
                           height: 52,
                           child: OutlinedButton(
                             onPressed: () {
-                              context.go('/all-feedback');
+                              context.go(AppRoutes.allFeedback);
                             },
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(
@@ -179,7 +180,7 @@ class AdminOverviewScreen extends StatelessWidget {
 
                         TextButton(
                           onPressed: () {
-                            context.go('/home');
+                            context.go(AppRoutes.home);
                           },
                           child: const Text(
                             'Back to User Dashboard',

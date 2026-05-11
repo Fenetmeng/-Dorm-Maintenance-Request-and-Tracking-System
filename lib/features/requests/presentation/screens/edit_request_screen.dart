@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../auth/presentation/widgets/auth_button.dart';
@@ -27,7 +28,7 @@ class EditRequestScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/request-details');
+                        context.go(AppRoutes.requestDetails);
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -149,7 +150,7 @@ class EditRequestScreen extends StatelessWidget {
                         AuthButton(
                           text: 'Update Request',
                           onPressed: () {
-                            context.go('/request-details');
+                            context.go(AppRoutes.requestDetails);
                           },
                         ),
 
@@ -160,7 +161,7 @@ class EditRequestScreen extends StatelessWidget {
                           height: 52,
                           child: OutlinedButton(
                             onPressed: () {
-                              context.go('/requests');
+                              context.go(AppRoutes.requests);
                             },
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(

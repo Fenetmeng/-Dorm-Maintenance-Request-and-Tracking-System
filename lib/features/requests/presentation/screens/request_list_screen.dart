@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../home/presentation/widgets/recent_request_card.dart';
@@ -26,7 +27,7 @@ class RequestListScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/home');
+                        context.go(AppRoutes.home);
                       },
                       icon: const Icon(
                         Icons.menu,
@@ -124,7 +125,7 @@ class RequestListScreen extends StatelessWidget {
                           statusColor: const Color(0xFFF2B705),
                           statusBackground: const Color(0xFFFFF6D8),
                           onTap: () {
-                            context.go('/request-details');
+                            context.go(AppRoutes.requestDetails);
                           },
                         ),
 
@@ -135,7 +136,7 @@ class RequestListScreen extends StatelessWidget {
                           statusColor: const Color(0xFFF59E0B),
                           statusBackground: const Color(0xFFFFF6D8),
                           onTap: () {
-                            context.go('/request-details');
+                            context.go(AppRoutes.requestDetails);
                           },
                         ),
 
@@ -146,7 +147,7 @@ class RequestListScreen extends StatelessWidget {
                           statusColor: const Color(0xFF22C55E),
                           statusBackground: const Color(0xFFDFF8E8),
                           onTap: () {
-                            context.go('/request-details');
+                            context.go(AppRoutes.requestDetails);
                           },
                         ),
                       ],

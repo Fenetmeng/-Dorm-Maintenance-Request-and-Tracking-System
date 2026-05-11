@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../widgets/admin_request_card.dart';
@@ -26,7 +27,7 @@ class AllRequestsScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/admin-overview');
+                        context.go(AppRoutes.adminOverview);
                       },
                       icon: const Icon(
                         Icons.menu,
@@ -148,7 +149,7 @@ class AllRequestsScreen extends StatelessWidget {
                           status: 'Pending',
                           assignedTo: 'Unassigned',
                           onTap: () {
-                            context.go('/assign-task');
+                            context.go(AppRoutes.assignTask);
                           },
                         ),
 
@@ -159,7 +160,7 @@ class AllRequestsScreen extends StatelessWidget {
                           status: 'In Progress',
                           assignedTo: 'Staff: Mike R.',
                           onTap: () {
-                            context.go('/assign-task');
+                            context.go(AppRoutes.assignTask);
                           },
                         ),
 
@@ -170,7 +171,7 @@ class AllRequestsScreen extends StatelessWidget {
                           status: 'Pending',
                           assignedTo: 'Unassigned',
                           onTap: () {
-                            context.go('/assign-task');
+                            context.go(AppRoutes.assignTask);
                           },
                         ),
                       ],

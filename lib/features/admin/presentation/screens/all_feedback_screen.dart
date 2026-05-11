@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../widgets/feedback_card.dart';
@@ -26,7 +27,7 @@ class AllFeedbackScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/admin-overview');
+                        context.go(AppRoutes.adminOverview);
                       },
                       icon: const Icon(
                         Icons.arrow_back,

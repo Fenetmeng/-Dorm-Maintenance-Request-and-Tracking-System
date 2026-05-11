@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../widgets/auth_button.dart';
@@ -80,7 +81,7 @@ class SignupScreen extends StatelessWidget {
                       AuthButton(
                         text: 'SIGN UP',
                         onPressed: () {
-                          context.go('/login');
+                          context.go(AppRoutes.login);
                         },
                       ),
 
@@ -95,7 +96,7 @@ class SignupScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              context.go('/login');
+                              context.go(AppRoutes.login);
                             },
                             child: const Text(
                               ' Log In',

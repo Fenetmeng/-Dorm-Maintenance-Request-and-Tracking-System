@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 
@@ -25,7 +26,7 @@ class FeedbackScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go('/request-details');
+                        context.go(AppRoutes.requestDetails);
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -149,7 +150,7 @@ class FeedbackScreen extends StatelessWidget {
                           height: 52,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.go('/home');
+                              context.go(AppRoutes.home);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryBlue,
@@ -173,7 +174,7 @@ class FeedbackScreen extends StatelessWidget {
 
                         TextButton(
                           onPressed: () {
-                            context.go('/home');
+                            context.go(AppRoutes.home);
                           },
                           child: const Text(
                             'Skip for now',
