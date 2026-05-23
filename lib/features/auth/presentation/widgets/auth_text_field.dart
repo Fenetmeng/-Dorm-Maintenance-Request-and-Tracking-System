@@ -5,12 +5,16 @@ class AuthTextField extends StatelessWidget {
   final String label;
   final String hintText;
   final bool obscureText;
+  final TextEditingController? controller;
+  final TextInputType keyboardType;
 
   const AuthTextField({
     super.key,
     required this.label,
     required this.hintText,
     this.obscureText = false,
+    this.controller,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -28,7 +32,9 @@ class AuthTextField extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextField(
+          controller: controller,
           obscureText: obscureText,
+          keyboardType: keyboardType,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: const TextStyle(

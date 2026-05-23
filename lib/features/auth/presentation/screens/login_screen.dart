@@ -1,17 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/auth_button.dart';
 import '../widgets/auth_text_field.dart';
 import '../widgets/google_button.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      ref.read(authProvider.notifier).createDefaultAdminIfNeeded();
+    });
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage('Please enter email and password', isError: true);
+      return;
+    }
+
+    await ref.read(authProvider.notifier).login(
+          email: email,
+          password: password,
+        );
+
+    final authState = ref.read(authProvider);
+
+    if (authState.errorMessage != null) {
+      _showMessage(authState.errorMessage!, isError: true);
+      return;
+    }
+
+    final user = authState.currentUser;
+
+    if (user == null) {
+      _showMessage('Login failed', isError: true);
+      return;
+    }
+
+    if (!mounted) return;
+
+    if (user.role == 'admin') {
+      context.go('/admin-overview');
+    } else {
+      context.go('/home');
+    }
+  }
+
+  void _showMessage(String message, {required bool isError}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+
     return Scaffold(
       backgroundColor: AppColors.lightBlue,
       body: Center(
@@ -55,16 +128,19 @@ class LoginScreen extends StatelessWidget {
 
                         const SizedBox(height: 24),
 
-                        const AuthTextField(
+                        AuthTextField(
                           label: 'Email Address',
                           hintText: 'Enter your email',
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
                         ),
 
                         const SizedBox(height: 18),
 
-                        const AuthTextField(
+                        AuthTextField(
                           label: 'Password',
                           hintText: 'Enter your password',
+                          controller: passwordController,
                           obscureText: true,
                         ),
 
@@ -74,7 +150,7 @@ class LoginScreen extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              context.go(AppRoutes.forgotPassword);
+                              context.go('/forgot-password');
                             },
                             child: const Text(
                               'Forgot Password?',
@@ -88,41 +164,14 @@ class LoginScreen extends StatelessWidget {
 
                         const SizedBox(height: 20),
 
-                        AuthButton(
-                          text: 'LOG IN',
-                          onPressed: () {
-                            context.go(AppRoutes.home);
-                          },
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        SizedBox(
-                          width: double.infinity,
-                          height: 52,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              context.go(AppRoutes.adminOverview);
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                color: AppColors.primaryBlue,
+                        authState.isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : AuthButton(
+                                text: 'LOG IN',
+                                onPressed: _login,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              backgroundColor: Colors.white,
-                            ),
-                            child: const Text(
-                              'Admin Demo',
-                              style: TextStyle(
-                                color: AppColors.primaryBlue,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
 
                         const SizedBox(height: 16),
 
@@ -135,7 +184,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () {
-                                context.go(AppRoutes.signup);
+                                context.go('/signup');
                               },
                               child: const Text(
                                 'Sign Up',

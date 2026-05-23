@@ -1,8 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
 import 'core/routing/app_router.dart';
 
 void main() {
-  runApp(const DormitoryApp());
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+
+  runApp(
+    const ProviderScope(
+      child: DormitoryApp(),
+    ),
+  );
 }
 
 class DormitoryApp extends StatelessWidget {
@@ -11,6 +25,7 @@ class DormitoryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      title: 'DormFix',
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
     );

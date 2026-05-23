@@ -29,9 +29,9 @@ class FeedbackScreen extends StatelessWidget {
                         context.go(AppRoutes.requestDetails);
                       },
                       icon: const Icon(
-                        Icons.arrow_back,
-                        color: AppColors.primaryBlue,
-                      ),
+  Icons.arrow_back,
+  color: Color(0xFF0F172A),
+),
                     ),
                     const Expanded(
                       child: Center(

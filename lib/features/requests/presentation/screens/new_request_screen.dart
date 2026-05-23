@@ -1,16 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../auth/presentation/widgets/auth_button.dart';
 import '../../../auth/presentation/widgets/auth_text_field.dart';
+import '../providers/request_provider.dart';
 
-class NewRequestScreen extends StatelessWidget {
+class NewRequestScreen extends ConsumerStatefulWidget {
   const NewRequestScreen({super.key});
 
   @override
+  ConsumerState<NewRequestScreen> createState() => _NewRequestScreenState();
+}
+
+class _NewRequestScreenState extends ConsumerState<NewRequestScreen> {
+  final categoryController = TextEditingController();
+  final locationController = TextEditingController();
+  final roomController = TextEditingController();
+  final descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    categoryController.dispose();
+    locationController.dispose();
+    roomController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitRequest() async {
+    final category = categoryController.text.trim();
+    final location = locationController.text.trim();
+    final room = roomController.text.trim();
+    final description = descriptionController.text.trim();
+
+    if (category.isEmpty ||
+        location.isEmpty ||
+        room.isEmpty ||
+        description.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all fields'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final notifier = ref.read(requestProvider.notifier);
+
+    await notifier.createRequest(
+      title: '$category Issue',
+      category: category,
+      location: location,
+      roomNumber: room,
+      description: description,
+    );
+
+    if (!mounted) return;
+
+    final state = ref.read(requestProvider);
+
+    if (state.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(state.errorMessage!),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Request submitted successfully'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    context.go('/requests');
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final requestState = ref.watch(requestProvider);
+
     return Scaffold(
       backgroundColor: AppColors.lightBlue,
       body: Center(
@@ -27,9 +102,7 @@ class NewRequestScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () {
-                        context.go(AppRoutes.home);
-                      },
+                      onPressed: () => context.go('/home'),
                       icon: const Icon(
                         Icons.arrow_back,
                         color: AppColors.primaryBlue,
@@ -61,23 +134,26 @@ class NewRequestScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const AuthTextField(
+                        AuthTextField(
                           label: 'Category',
                           hintText: 'Plumbing',
+                          controller: categoryController,
                         ),
 
                         const SizedBox(height: 18),
 
-                        const AuthTextField(
+                        AuthTextField(
                           label: 'Location',
                           hintText: 'Gibe Hall',
+                          controller: locationController,
                         ),
 
                         const SizedBox(height: 18),
 
-                        const AuthTextField(
+                        AuthTextField(
                           label: 'Room Number',
                           hintText: 'Enter room number',
+                          controller: roomController,
                         ),
 
                         const SizedBox(height: 18),
@@ -90,9 +166,11 @@ class NewRequestScreen extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
+
                         const SizedBox(height: 8),
 
                         TextField(
+                          controller: descriptionController,
                           maxLines: 4,
                           decoration: InputDecoration(
                             hintText: 'Describe the issue in detail...',
@@ -114,7 +192,7 @@ class NewRequestScreen extends StatelessWidget {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
+                              borderSide: BorderSide(
                                 color: AppColors.primaryBlue,
                               ),
                             ),
@@ -146,12 +224,14 @@ class NewRequestScreen extends StatelessWidget {
 
                         const SizedBox(height: 34),
 
-                        AuthButton(
-                          text: 'Submit Request',
-                          onPressed: () {
-                            context.go(AppRoutes.requests);
-                          },
-                        ),
+                        requestState.isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : AuthButton(
+                                text: 'Submit Request',
+                                onPressed: _submitRequest,
+                              ),
                       ],
                     ),
                   ),

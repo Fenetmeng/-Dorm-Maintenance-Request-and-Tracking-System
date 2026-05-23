@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../auth/presentation/widgets/auth_button.dart';
 import '../../../auth/presentation/widgets/auth_text_field.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+    final user = authState.currentUser;
+
+    final userName = user?.name ?? 'User';
+    final userEmail = user?.email ?? 'No email';
+
     return Scaffold(
       backgroundColor: AppColors.lightBlue,
       body: Center(
@@ -28,7 +35,7 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go(AppRoutes.home);
+                        context.go('/home');
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -43,6 +50,7 @@ class ProfileScreen extends StatelessWidget {
                             fontSize: 17,
                             fontWeight: FontWeight.w700,
                             color: AppColors.primaryBlue,
+                            letterSpacing: 1,
                           ),
                         ),
                       ),
@@ -72,9 +80,9 @@ class ProfileScreen extends StatelessWidget {
 
                         const SizedBox(height: 10),
 
-                        const Text(
-                          'Hana Bekele',
-                          style: TextStyle(
+                        Text(
+                          userName,
+                          style: const TextStyle(
                             fontSize: 16,
                             color: AppColors.primaryBlue,
                             fontWeight: FontWeight.w600,
@@ -97,16 +105,16 @@ class ProfileScreen extends StatelessWidget {
 
                         const SizedBox(height: 22),
 
-                        const AuthTextField(
+                        AuthTextField(
                           label: 'Full Name',
-                          hintText: 'Hana Bekele',
+                          hintText: userName,
                         ),
 
                         const SizedBox(height: 18),
 
-                        const AuthTextField(
-                          label: 'Phone Number',
-                          hintText: '+251 912 345 678',
+                        AuthTextField(
+                          label: 'Email Address',
+                          hintText: userEmail,
                         ),
 
                         const SizedBox(height: 28),
@@ -142,9 +150,9 @@ class ProfileScreen extends StatelessWidget {
                         const SizedBox(height: 34),
 
                         AuthButton(
-                           text: 'Done',
-                           onPressed: () {
-                            context.go(AppRoutes.home);
+                          text: 'Done',
+                          onPressed: () {
+                            context.go('/home');
                           },
                         ),
 
@@ -154,8 +162,14 @@ class ProfileScreen extends StatelessWidget {
                           width: double.infinity,
                           height: 52,
                           child: ElevatedButton(
-                            onPressed: () {
-                              context.go(AppRoutes.welcome);
+                            onPressed: () async {
+                              await ref
+                                  .read(authProvider.notifier)
+                                  .deleteAccount();
+
+                              if (context.mounted) {
+                                context.go('/login');
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFEF4444),
@@ -171,6 +185,23 @@ class ProfileScreen extends StatelessWidget {
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
                               ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        TextButton(
+                          onPressed: () {
+                            ref.read(authProvider.notifier).logout();
+                            context.go('/login');
+                          },
+                          child: const Text(
+                            'Logout',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),

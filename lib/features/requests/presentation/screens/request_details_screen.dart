@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/routing/app_routes.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../domain/models/maintenance_request_model.dart';
+import '../providers/request_provider.dart';
 
-class RequestDetailsScreen extends StatelessWidget {
+class RequestDetailsScreen extends ConsumerWidget {
   const RequestDetailsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final extra = GoRouterState.of(context).extra;
+
+    final requestState = ref.watch(requestProvider);
+
+    final MaintenanceRequestModel? request =
+        extra is MaintenanceRequestModel
+            ? extra
+            : requestState.requests.isNotEmpty
+                ? requestState.requests.first
+                : null;
+
     return Scaffold(
       backgroundColor: AppColors.lightBlue,
       body: Center(
@@ -26,7 +39,7 @@ class RequestDetailsScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        context.go(AppRoutes.requests);
+                        context.go('/requests');
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -41,6 +54,7 @@ class RequestDetailsScreen extends StatelessWidget {
                             fontSize: 17,
                             fontWeight: FontWeight.w700,
                             color: AppColors.primaryBlue,
+                            letterSpacing: 1,
                           ),
                         ),
                       ),
@@ -59,173 +73,297 @@ class RequestDetailsScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(18),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(14),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.06),
-                                blurRadius: 10,
-                                offset: const Offset(0, 3),
+                        if (request == null)
+                          const Center(
+                            child: Text(
+                              'No request selected',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.textBlack,
                               ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Expanded(
+                            ),
+                          )
+                        else ...[
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(18),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(14),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.06),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        request.title,
+                                        style: const TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.textBlack,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 5,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: _statusBackground(
+                                          request.status,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        request.status,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: _statusColor(request.status),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 24),
+
+                                DetailRow(
+                                  label: 'Category',
+                                  value: request.category,
+                                ),
+                                DetailRow(
+                                  label: 'Location',
+                                  value: request.location,
+                                ),
+                                DetailRow(
+                                  label: 'Room Number',
+                                  value: request.roomNumber,
+                                ),
+                                DetailRow(
+                                  label: 'Submitted Date',
+                                  value: request.dateRequested.length >= 10
+                                      ? request.dateRequested.substring(0, 10)
+                                      : request.dateRequested,
+                                ),
+
+                                const SizedBox(height: 18),
+
+                                const Text(
+                                  'Description',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textBlack,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 8),
+
+                                Text(
+                                  request.description,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    height: 1.5,
+                                    color: Color(0xFF555555),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 24),
+
+                                Container(
+                                  width: double.infinity,
+                                  height: 130,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE5E5E5),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Center(
                                     child: Text(
-                                      'Leaking Faucet',
+                                      'Uploaded photo preview',
                                       style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.textBlack,
+                                        color: Color(0xFF555555),
+                                        fontSize: 13,
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 5,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFFFF6D8),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: const Text(
-                                      'Pending',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFFF2B705),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 30),
+
+                          SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                context.go('/edit-request', extra: request);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryBlue,
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text(
+                                'Edit Request',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          if (request.status.toLowerCase() ==
+                              'completed') ...[
+                            const SizedBox(height: 14),
+
+                            SizedBox(
+                              width: double.infinity,
+                              height: 52,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  context.go('/feedback', extra: request);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF22C55E),
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Leave Feedback',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+
+                          const SizedBox(height: 14),
+
+                          SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: OutlinedButton(
+                              onPressed: () async {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Delete Request?'),
+                                      content: const Text(
+                                        'This action cannot be undone.',
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, false);
+                                          },
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, true);
+                                          },
+                                          child: const Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
 
-                              const SizedBox(height: 24),
+                                if (confirm == true && request.id != null) {
+                                  await ref
+                                      .read(requestProvider.notifier)
+                                      .deleteRequest(request.id!);
 
-                              const DetailRow(
-                                label: 'Category',
-                                value: 'Plumbing',
-                              ),
-                              const DetailRow(
-                                label: 'Location',
-                                value: 'Dorm A',
-                              ),
-                              const DetailRow(
-                                label: 'Room Number',
-                                value: '101',
-                              ),
-                              const DetailRow(
-                                label: 'Submitted Date',
-                                value: 'Oct 24, 2023',
-                              ),
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Request deleted successfully',
+                                        ),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
 
-                              const SizedBox(height: 18),
-
-                              const Text(
-                                'Description',
+                                    context.go('/requests');
+                                  }
+                                }
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                  color: Colors.red,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text(
+                                'Delete Request',
                                 style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textBlack,
+                                  color: Colors.red,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                'The faucet in the bathroom has been leaking continuously and needs repair as soon as possible.',
+                            ),
+                          ),
+
+                          const SizedBox(height: 14),
+
+                          SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                context.go('/requests');
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                  color: AppColors.primaryBlue,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text(
+                                'Back to Requests',
                                 style: TextStyle(
-                                  fontSize: 13,
-                                  height: 1.5,
-                                  color: Color(0xFF555555),
+                                  color: AppColors.primaryBlue,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              ),
-
-                              const SizedBox(height: 24),
-
-                              Container(
-                                width: double.infinity,
-                                height: 130,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFE5E5E5),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'Uploaded photo preview',
-                                    style: TextStyle(
-                                      color: Color(0xFF555555),
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 30),
-
-                        SizedBox(
-                          width: double.infinity,
-                          height: 52,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              context.go(AppRoutes.editRequest);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryBlue,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Text(
-                              'Edit Request',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
-                        ),
-
-                        const SizedBox(height: 14),
-
-                        SizedBox(
-                          width: double.infinity,
-                          height: 52,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              context.go(AppRoutes.requests);
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                color: AppColors.primaryBlue,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Text(
-                              'Back to Requests',
-                              style: TextStyle(
-                                color: AppColors.primaryBlue,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
+                        ],
                       ],
                     ),
                   ),
@@ -236,6 +374,30 @@ class RequestDetailsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color _statusColor(String status) {
+    final lowerStatus = status.toLowerCase();
+
+    if (lowerStatus.contains('completed')) {
+      return const Color(0xFF22C55E);
+    }
+
+    if (lowerStatus.contains('progress')) {
+      return const Color(0xFFF59E0B);
+    }
+
+    return const Color(0xFFF2B705);
+  }
+
+  Color _statusBackground(String status) {
+    final lowerStatus = status.toLowerCase();
+
+    if (lowerStatus.contains('completed')) {
+      return const Color(0xFFDFF8E8);
+    }
+
+    return const Color(0xFFFFF6D8);
   }
 }
 
