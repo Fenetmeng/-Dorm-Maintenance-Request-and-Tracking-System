@@ -23,7 +23,7 @@ class AppDatabase {
 
     return openDatabase(
       path,
-      version: 4,
+      version: 5,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
     );
@@ -50,7 +50,8 @@ class AppDatabase {
         description TEXT NOT NULL,
         status TEXT NOT NULL,
         dateRequested TEXT NOT NULL,
-        userEmail TEXT NOT NULL
+        userEmail TEXT NOT NULL,
+        imagePath TEXT
       )
     ''');
 
@@ -120,24 +121,30 @@ class AppDatabase {
         )
       ''');
     }
-    if (oldVersion < 4) {
-  await db.execute('DROP TABLE IF EXISTS ${DatabaseTables.feedback}');
 
-  await db.execute('''
-    CREATE TABLE ${DatabaseTables.feedback} (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      requestId INTEGER NOT NULL,
-      requestTitle TEXT NOT NULL,
-      userName TEXT NOT NULL,
-      userEmail TEXT NOT NULL,
-      rating INTEGER NOT NULL,
-      comment TEXT NOT NULL,
-      createdAt TEXT NOT NULL
-    )
-  ''');
-}
+    if (oldVersion < 4) {
+      await db.execute('DROP TABLE IF EXISTS ${DatabaseTables.feedback}');
+
+      await db.execute('''
+        CREATE TABLE ${DatabaseTables.feedback} (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          requestId INTEGER NOT NULL,
+          requestTitle TEXT NOT NULL,
+          userName TEXT NOT NULL,
+          userEmail TEXT NOT NULL,
+          rating INTEGER NOT NULL,
+          comment TEXT NOT NULL,
+          createdAt TEXT NOT NULL
+        )
+      ''');
+    }
+
+    if (oldVersion < 5) {
+      await db.execute(
+        'ALTER TABLE ${DatabaseTables.maintenanceRequests} ADD COLUMN imagePath TEXT',
+      );
+    }
   }
-   
 
   Future<int> insert(String table, Map<String, dynamic> data) async {
     final db = await database;

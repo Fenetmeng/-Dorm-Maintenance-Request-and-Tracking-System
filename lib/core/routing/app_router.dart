@@ -15,7 +15,7 @@ import '../../features/admin/presentation/screens/all_requests_screen.dart';
 import '../../features/admin/presentation/screens/assign_task_screen.dart';
 import '../../features/admin/presentation/screens/staff_workload_screen.dart';
 import '../../features/admin/presentation/screens/all_feedback_screen.dart';
-import '../../features/admin/presentation/screens/feedback_screen.dart';
+import '../../features/feedback/presentation/screens/feedback_screen.dart';
 import 'app_routes.dart';
 
 final GoRouter appRouter = GoRouter(

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -182,22 +183,56 @@ class RequestDetailsScreen extends ConsumerWidget {
 
                                 const SizedBox(height: 24),
 
+                                const Text(
+                                  'Uploaded Photo',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textBlack,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+
                                 Container(
                                   width: double.infinity,
-                                  height: 130,
+                                  height: 170,
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFE5E5E5),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: const Center(
-                                    child: Text(
-                                      'Uploaded photo preview',
-                                      style: TextStyle(
-                                        color: Color(0xFF555555),
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
+                                  child: request.imagePath == null ||
+                                          request.imagePath!.isEmpty
+                                      ? const Center(
+                                          child: Text(
+                                            'No photo uploaded',
+                                            style: TextStyle(
+                                              color: Color(0xFF555555),
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.network(
+  request.imagePath!,
+  width: double.infinity,
+  height: 170,
+  fit: BoxFit.cover,
+  errorBuilder: (context, error, stackTrace) {
+    return const Center(
+      child: Text(
+        'Could not load photo',
+        style: TextStyle(
+          color: Colors.red,
+          fontSize: 13,
+        ),
+      ),
+    );
+  },
+),
+                                        ),
                                 ),
                               ],
                             ),
@@ -233,7 +268,6 @@ class RequestDetailsScreen extends ConsumerWidget {
                           if (request.status.toLowerCase() ==
                               'completed') ...[
                             const SizedBox(height: 14),
-
                             SizedBox(
                               width: double.infinity,
                               height: 52,

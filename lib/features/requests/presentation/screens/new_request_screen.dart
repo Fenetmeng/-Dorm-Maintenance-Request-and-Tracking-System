@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +21,9 @@ class _NewRequestScreenState extends ConsumerState<NewRequestScreen> {
   final roomController = TextEditingController();
   final descriptionController = TextEditingController();
 
+  String? selectedFileName;
+  PlatformFile? selectedImageFile;
+
   @override
   void dispose() {
     categoryController.dispose();
@@ -27,6 +31,41 @@ class _NewRequestScreenState extends ConsumerState<NewRequestScreen> {
     roomController.dispose();
     descriptionController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickPhoto() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+        withData: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          selectedImageFile = result.files.single;
+          selectedFileName = result.files.single.name;
+        });
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Photo selected successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Photo selection failed: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   Future<void> _submitRequest() async {
@@ -56,6 +95,7 @@ class _NewRequestScreenState extends ConsumerState<NewRequestScreen> {
       location: location,
       roomNumber: room,
       description: description,
+      imageFile: selectedImageFile,
     );
 
     if (!mounted) return;
@@ -73,8 +113,12 @@ class _NewRequestScreenState extends ConsumerState<NewRequestScreen> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Request submitted successfully'),
+      SnackBar(
+        content: Text(
+          selectedFileName == null
+              ? 'Request submitted successfully'
+              : 'Request submitted successfully with photo: $selectedFileName',
+        ),
         backgroundColor: Colors.green,
       ),
     );
@@ -192,7 +236,7 @@ class _NewRequestScreenState extends ConsumerState<NewRequestScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: AppColors.primaryBlue,
                               ),
                             ),
@@ -202,20 +246,51 @@ class _NewRequestScreenState extends ConsumerState<NewRequestScreen> {
                         const SizedBox(height: 24),
 
                         Center(
-                          child: Container(
-                            width: 170,
-                            height: 110,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE5E5E5),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'Upload photo (optional)',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Color(0xFF555555),
+                          child: GestureDetector(
+                            onTap: _pickPhoto,
+                            child: Container(
+                              width: 180,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFE5E5E5),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: selectedFileName == null
+                                      ? const Color(0xFFD6DDE8)
+                                      : AppColors.primaryBlue,
+                                ),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        selectedFileName == null
+                                            ? Icons.upload_file
+                                            : Icons.check_circle,
+                                        color: selectedFileName == null
+                                            ? const Color(0xFF555555)
+                                            : AppColors.primaryBlue,
+                                      ),
+
+                                      const SizedBox(height: 8),
+
+                                      Text(
+                                        selectedFileName == null
+                                            ? 'Upload photo (optional)'
+                                            : selectedFileName!,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          color: Color(0xFF555555),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

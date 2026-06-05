@@ -1,0 +1,42 @@
+{
+  "requests": [
+    {
+      "id": 1780695517981,
+      "title": "plumping Issue",
+      "category": "plumping",
+      "location": "gibe hall",
+      "roomNumber": "101",
+      "description": "506",
+      "status": "Completed",
+      "dateRequested": "2026-06-06T00:38:37.105",
+      "userEmail": "kkk@gmail.com",
+      "imagePath": "http://localhost:3000/uploads/1780695517137-howto.jpg"
+    },
+    {
+      "id": 1780700827849,
+      "title": "toilet Issue",
+      "category": "toilet",
+      "location": "girls dorm",
+      "roomNumber": "444",
+      "description": "leaking",
+      "status": "In Progress",
+      "dateRequested": "2026-06-06T02:07:07.767",
+      "userEmail": "kkk@gmail.com",
+      "imagePath": "http://localhost:3000/uploads/1780700827777-howto.jpg"
+    }
+  ],
+  "users": [],
+  "assignments": [],
+  "feedback": [
+    {
+      "id": 1780698194959,
+      "requestId": 1780695517981,
+      "requestTitle": "plumping Issue",
+      "userName": "katy",
+      "userEmail": "kkk@gmail.com",
+      "rating": 5,
+      "comment": "wow",
+      "createdAt": "2026-06-06T01:23:14.917"
+    }
+  ]
+}

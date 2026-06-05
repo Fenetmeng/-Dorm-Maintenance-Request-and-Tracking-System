@@ -1,3 +1,6 @@
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+
 import '../../domain/models/maintenance_request_model.dart';
 import '../local/request_local_data_source.dart';
 import '../remote/request_remote_data_source.dart';
@@ -7,15 +10,17 @@ class RequestRepository {
   final RequestRemoteDataSource _remoteDataSource = RequestRemoteDataSource();
 
   Future<List<MaintenanceRequestModel>> getUserRequests(String userEmail) async {
-    // Cache-first strategy
     try {
-      final localRequests = await _localDataSource.getRequestsByUser(userEmail);
-      if (localRequests.isNotEmpty) return localRequests;
-
       final remoteRequests = await _remoteDataSource.getAllRequests();
-      // You can save remote data to local cache here if needed
-      return remoteRequests;
+
+      return remoteRequests.where((request) {
+        return request.userEmail == userEmail;
+      }).toList();
     } catch (e) {
+      if (kIsWeb) {
+        throw Exception('Backend API is not running');
+      }
+
       return await _localDataSource.getRequestsByUser(userEmail);
     }
   }
@@ -27,8 +32,16 @@ class RequestRepository {
     required String roomNumber,
     required String description,
     required String userEmail,
+    String? imagePath,
+    PlatformFile? imageFile,
   }) async {
     final now = DateTime.now().toIso8601String();
+
+    String? uploadedImageUrl = imagePath;
+
+    if (imageFile != null) {
+      uploadedImageUrl = await _remoteDataSource.uploadImage(imageFile);
+    }
 
     final request = MaintenanceRequestModel(
       title: title,
@@ -38,23 +51,31 @@ class RequestRepository {
       description: description,
       dateRequested: now,
       userEmail: userEmail,
+      imagePath: uploadedImageUrl,
     );
 
-    final id = await _localDataSource.createRequest(request);
-    final createdRequest = request.copyWith(id: id);
+    final createdRequest = await _remoteDataSource.createRequest(request);
 
-    // Background sync
-    _remoteDataSource.syncRequest(createdRequest).catchError((_) {});
+    if (!kIsWeb) {
+      await _localDataSource.createRequest(createdRequest);
+    }
 
     return createdRequest;
   }
 
   Future<void> updateRequest(MaintenanceRequestModel request) async {
-    await _localDataSource.updateRequest(request);
-    _remoteDataSource.syncRequest(request).catchError((_) {});
+    final updatedRequest = await _remoteDataSource.updateRequest(request);
+
+    if (!kIsWeb) {
+      await _localDataSource.updateRequest(updatedRequest);
+    }
   }
 
   Future<void> deleteRequest(int id) async {
-    await _localDataSource.deleteRequest(id);
+    await _remoteDataSource.deleteRequest(id);
+
+    if (!kIsWeb) {
+      await _localDataSource.deleteRequest(id);
+    }
   }
 }

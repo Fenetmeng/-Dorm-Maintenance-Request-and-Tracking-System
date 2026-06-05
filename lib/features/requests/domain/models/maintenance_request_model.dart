@@ -8,6 +8,7 @@ class MaintenanceRequestModel {
   final String status;
   final String dateRequested;
   final String userEmail;
+  final String? imagePath;
 
   const MaintenanceRequestModel({
     this.id,
@@ -19,6 +20,7 @@ class MaintenanceRequestModel {
     this.status = 'Pending',
     required this.dateRequested,
     required this.userEmail,
+    this.imagePath,
   });
 
   factory MaintenanceRequestModel.fromMap(Map<String, dynamic> map) {
@@ -32,6 +34,7 @@ class MaintenanceRequestModel {
       status: map['status'] as String,
       dateRequested: map['dateRequested'] as String,
       userEmail: map['userEmail'] as String,
+      imagePath: map['imagePath'] as String?,
     );
   }
 
@@ -46,6 +49,7 @@ class MaintenanceRequestModel {
       'status': status,
       'dateRequested': dateRequested,
       'userEmail': userEmail,
+      'imagePath': imagePath,
     };
   }
 
@@ -59,6 +63,7 @@ class MaintenanceRequestModel {
     String? status,
     String? dateRequested,
     String? userEmail,
+    String? imagePath,
   }) {
     return MaintenanceRequestModel(
       id: id ?? this.id,
@@ -70,6 +75,7 @@ class MaintenanceRequestModel {
       status: status ?? this.status,
       dateRequested: dateRequested ?? this.dateRequested,
       userEmail: userEmail ?? this.userEmail,
+      imagePath: imagePath ?? this.imagePath,
     );
   }
 }

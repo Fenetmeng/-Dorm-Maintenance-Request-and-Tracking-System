@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../../../core/models/cache_result.dart';
 import '../../domain/models/feedback_model.dart';
 import '../local/feedback_local_data_source.dart';
@@ -8,35 +10,56 @@ class FeedbackRepository {
   final FeedbackRemoteDataSource _remoteDataSource = FeedbackRemoteDataSource();
 
   Future<CacheResult<List<FeedbackModel>>> getAllFeedback() async {
-    final cachedFeedback = await _localDataSource.getAllFeedback();
+    try {
+      final remoteFeedback = await _remoteDataSource.getAllFeedback();
 
-    // Always trust SQLite first.
-    if (cachedFeedback.isNotEmpty) {
+      return CacheResult(
+        data: remoteFeedback,
+        fromCache: false,
+      );
+    } catch (e) {
+      if (kIsWeb) {
+        throw Exception('Backend API is not running');
+      }
+
+      final cachedFeedback = await _localDataSource.getAllFeedback();
+
       return CacheResult(
         data: cachedFeedback,
         fromCache: true,
       );
     }
-
-    // Remote fallback only if SQLite is empty.
-    final remoteFeedback = await _remoteDataSource.fetchFeedbackFromNetwork();
-
-    return CacheResult(
-      data: remoteFeedback,
-      fromCache: false,
-    );
   }
 
   Future<List<FeedbackModel>> getFeedbackByUser(String userEmail) async {
-    return _localDataSource.getFeedbackByUser(userEmail);
+    try {
+      final result = await _remoteDataSource.getAllFeedback();
+
+      return result.where((feedback) {
+        return feedback.userEmail == userEmail;
+      }).toList();
+    } catch (e) {
+      if (kIsWeb) {
+        throw Exception('Backend API is not running');
+      }
+
+      return _localDataSource.getFeedbackByUser(userEmail);
+    }
   }
 
   Future<FeedbackModel> createFeedback(FeedbackModel feedback) async {
-    final savedFeedback = await _localDataSource.createFeedback(feedback);
-    return savedFeedback;
+    final createdFeedback = await _remoteDataSource.createFeedback(feedback);
+
+    if (!kIsWeb) {
+      await _localDataSource.createFeedback(createdFeedback);
+    }
+
+    return createdFeedback;
   }
 
   Future<void> deleteFeedback(int id) async {
-    await _localDataSource.deleteFeedback(id);
+    if (!kIsWeb) {
+      await _localDataSource.deleteFeedback(id);
+    }
   }
 }

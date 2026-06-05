@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../auth/presentation/providers/auth_provider.dart';
@@ -77,11 +78,14 @@ class RequestNotifier extends Notifier<RequestState> {
     required String location,
     required String roomNumber,
     required String description,
+    String? imagePath,
+    PlatformFile? imageFile,
   }) async {
     final user = ref.read(authProvider).currentUser;
 
     if (user == null) {
       state = state.copyWith(
+        isLoading: false,
         errorMessage: 'You must login first',
       );
       return;
@@ -97,6 +101,8 @@ class RequestNotifier extends Notifier<RequestState> {
         roomNumber: roomNumber,
         description: description,
         userEmail: user.email,
+        imagePath: imagePath,
+        imageFile: imageFile,
       );
 
       await loadUserRequests();
