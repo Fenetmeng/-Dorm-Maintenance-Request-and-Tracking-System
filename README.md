@@ -11,6 +11,15 @@
       Lidiya Girma	      UGR/4475/16
       Melat  Lemma        UGR/2585/15
 
+      ## Demo Video
+
+Watch the project demonstration here:
+
+[Loom Demo Recording](https://www.loom.com/share/e19cbaf29619419091eee1f3ecd5a02d
+                       https://www.loom.com/share/93ee13cce20248e5b224add31cf97350
+                       https://www.loom.com/share/6382fb5751254b6b9882f9a92b21abfb)
+                We have 3 links because loom free package only allows 5 min recording so even though it is 3 recording we made sure it did not pass the 15 min recording limit.
+
    Features  
 
  Authentication
